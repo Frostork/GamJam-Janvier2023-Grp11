@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody carRb;
 
+    [SerializeField] private GameObject bomb;
+
     void Start()
     {
         carRb = GetComponent<Rigidbody>();
@@ -54,6 +56,15 @@ public class PlayerController : MonoBehaviour
     {
         GetInputs();
         AnimateWheels();
+        
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var actualBomb = Instantiate(bomb);
+            
+            actualBomb.GetComponent<Rigidbody>().AddForce(-transform.forward * 2000);
+        }
+        
         //WheelEffects();
     }
 
@@ -64,6 +75,7 @@ public class PlayerController : MonoBehaviour
         Brake();
     }
 
+    #region Movement Functions
     public void MoveInput(float input)
     {
         moveInput = input;
@@ -87,7 +99,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach(var wheel in wheels)
         {
-            wheel.wheelCollider.motorTorque = -moveInput * 600 * maxAcceleration * Time.deltaTime;
+            wheel.wheelCollider.motorTorque = -moveInput * 1000 * maxAcceleration * Time.deltaTime;
         }
     }
 
@@ -120,7 +132,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    #endregion
     void AnimateWheels()
     {
         foreach(var wheel in wheels)
@@ -133,22 +145,22 @@ public class PlayerController : MonoBehaviour
             wheel.wheelModel.transform.rotation = rot;
         }
     }
-/*
-    void WheelEffects()
-    {
-        foreach (var wheel in wheels)
-        {
-            //var dirtParticleMainSettings = wheel.smokeParticle.main;
 
-            if (Input.GetKey(KeyCode.Space) && wheel.axel == Axel.Rear && wheel.wheelCollider.isGrounded == true && carRb.velocity.magnitude >= 10.0f)
-            {
-                wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = true;
-                wheel.smokeParticle.Emit(1);
-            }
-            else
-            {
-                wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = false;
-            }
-        }
-    }*/
+    // void WheelEffects()
+    // {
+    //     foreach (var wheel in wheels)
+    //     {
+    //         //var dirtParticleMainSettings = wheel.smokeParticle.main;
+    //
+    //         if (Input.GetKey(KeyCode.Space) && wheel.axel == Axel.Rear && wheel.wheelCollider.isGrounded == true && carRb.velocity.magnitude >= 10.0f)
+    //         {
+    //             wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = true;
+    //             wheel.smokeParticle.Emit(1);
+    //         }
+    //         else
+    //         {
+    //             wheel.wheelEffectObj.GetComponentInChildren<TrailRenderer>().emitting = false;
+    //         }
+    //     }
+    // }
 }

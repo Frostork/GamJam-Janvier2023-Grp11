@@ -13,6 +13,7 @@ public class Bomb : MonoBehaviour
     private float _speed;
     private Vector3 _direction;
 
+    [SerializeField] private float _timeAlived;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -23,10 +24,6 @@ public class Bomb : MonoBehaviour
     {
         _lastVelocity = _rigidbody.velocity;
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _rigidbody.AddForce(new Vector3(1000,0,0));
-        }
     }
 
     private void OnCollisionEnter(Collision col)
@@ -39,7 +36,7 @@ public class Bomb : MonoBehaviour
 
     IEnumerator Explosed()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(_timeAlived);
         Destroy(gameObject);
     }
 }
