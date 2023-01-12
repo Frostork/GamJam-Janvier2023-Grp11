@@ -87,8 +87,8 @@ public class PlayerController : MonoBehaviour
         if (_canShootBomb && Input.GetKeyDown(KeyCode.Space))
         {
             _canShootBomb = false;
-            var actualBomb = Instantiate(bomb, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z - 5), Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-            actualBomb.GetComponent<Rigidbody>().AddForce(-transform.forward * 2000);
+            var actualBomb = Instantiate(bomb, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z + 3), Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+            actualBomb.GetComponent<Rigidbody>().AddForce(transform.forward * 2000);
         }
         
         //WheelEffects();
