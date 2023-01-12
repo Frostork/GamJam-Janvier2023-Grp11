@@ -2,10 +2,13 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+    #region Init
+
     public enum ControlMode
     {
         Keyboard,
@@ -28,6 +31,10 @@ public class PlayerController : MonoBehaviour
         public Axel axel;
     }
 
+    #endregion
+
+    #region Init Movement Variable
+
     public ControlMode control;
 
     public float maxAcceleration = 30.0f;
@@ -38,51 +45,86 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 _centerOfMass;
 
-    public List<Wheel> wheels;
-
     float moveInput;
     float steerInput;
 
-    private Rigidbody carRb;
+    #endregion
 
-    [SerializeField] private GameObject _bombOrigin;
-    [SerializeField] private bool canMove;
+    #region Init Variable
+
+    private Rigidbody _carRb;
+    private Animator _animator;
+
     public int Life;
     public bool CanTakeDamage;
-    [SerializeField] private GameObject bomb;
+    public bool CanTakeItem;
+
+    [SerializeField] private bool _canMove;
+
+    [Header("Bomb")] [SerializeField] private GameObject _bomb;
+    [SerializeField] private GameObject _bombOrigin;
     [SerializeField] private bool _canShootBomb;
 
-    private Animator _animator;
+    [Header("Shield")]
+    public GameObject ShieldPrefab;
+    [SerializeField] private bool _canActiveShield;
+    public bool HaveShield;
+
+    [Header("Wheels")] public List<Wheel> wheels;
+
+    #endregion
+
+    #region Take Damage
+
     public void TakeDamage()
     {
         foreach (var wheel in wheels)
         {
             wheel.wheelCollider.brakeTorque = 10000 * brakeAcceleration * Time.deltaTime;
-            carRb.velocity = Vector3.zero;
+            _carRb.velocity = Vector3.zero;
         }
-        
+
         _animator.SetBool("IsHit", true);
         Life -= 1;
         CanTakeDamage = false;
-        canMove = false;
+        _canMove = false;
         StartCoroutine(Restart());
     }
 
     IEnumerator Restart()
     {
         yield return new WaitForSeconds(2);
-        canMove = true;
+        _canMove = true;
         CanTakeDamage = true;
         _animator.SetBool("IsHit", false);
     }
 
+    #endregion
+
     void Start()
     {
         _animator = GetComponent<Animator>();
-        carRb = GetComponent<Rigidbody>();
-        carRb.centerOfMass = _centerOfMass;
-        canMove = true;
+        _carRb = GetComponent<Rigidbody>();
+        _carRb.centerOfMass = _centerOfMass;
+        _canMove = true;
         CanTakeDamage = true;
+        CanTakeItem = true;
+    }
+
+    private void ActiveItem()
+    {
+        if (_canShootBomb)
+        {
+            _canShootBomb = false;
+            var actualBomb = Instantiate(_bomb, _bombOrigin.transform.position, _bombOrigin.transform.localRotation);
+            actualBomb.GetComponent<Rigidbody>().AddForce(_bombOrigin.transform.forward * 5000);
+
+            if (_canActiveShield)
+            {
+                _canActiveShield = false;
+                ShieldPrefab.SetActive(true);
+            }
+        }
     }
 
     void Update()
@@ -90,18 +132,11 @@ public class PlayerController : MonoBehaviour
         GetInputs();
         AnimateWheels();
         _bombOrigin.transform.rotation = transform.localRotation;
-        
-        _canShootBomb = true;
-        if (_canShootBomb && Input.GetKeyDown(KeyCode.T))
+
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            if (_canShootBomb)
-            {
-                _canShootBomb = false;
-                var actualBomb = Instantiate(bomb, _bombOrigin.transform.position, _bombOrigin.transform.localRotation);
-                actualBomb.GetComponent<Rigidbody>().AddForce(_bombOrigin.transform.forward * 5000);
-            }
+            ActiveItem();
         }
-        
         //WheelEffects();
     }
 
@@ -113,6 +148,7 @@ public class PlayerController : MonoBehaviour
     }
 
     #region Movement Functions
+
     public void MoveInput(float input)
     {
         moveInput = input;
@@ -125,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
     void GetInputs()
     {
-        if(canMove && control == ControlMode.Keyboard)
+        if (_canMove && control == ControlMode.Keyboard)
         {
             moveInput = Input.GetAxis("Vertical");
             steerInput = Input.GetAxis("Horizontal");
@@ -134,12 +170,12 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (canMove)
+        if (_canMove)
         {
-            _animator.SetBool("IsDrive", true);     
+            _animator.SetBool("IsDrive", true);
             _animator.SetBool("IsIdle", false);
-            
-            foreach(var wheel in wheels)
+
+            foreach (var wheel in wheels)
             {
                 wheel.wheelCollider.motorTorque = moveInput * 1000 * maxAcceleration * Time.deltaTime;
             }
@@ -148,8 +184,8 @@ public class PlayerController : MonoBehaviour
         {
             _animator.SetBool("IsDrive", false);
             _animator.SetBool("IsIdle", true);
-            
-            foreach(var wheel in wheels)
+
+            foreach (var wheel in wheels)
             {
                 wheel.wheelCollider.motorTorque = 0;
             }
@@ -158,7 +194,7 @@ public class PlayerController : MonoBehaviour
 
     void Steer()
     {
-        foreach(var wheel in wheels)
+        foreach (var wheel in wheels)
         {
             if (wheel.axel == Axel.Front)
             {
@@ -185,10 +221,12 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     #endregion
+
     void AnimateWheels()
     {
-        foreach(var wheel in wheels)
+        foreach (var wheel in wheels)
         {
             Quaternion rot;
             Vector3 pos;
@@ -216,5 +254,4 @@ public class PlayerController : MonoBehaviour
     //         }
     //     }
     // }
-    
 }

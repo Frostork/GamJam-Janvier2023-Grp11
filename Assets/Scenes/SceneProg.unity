@@ -141,6 +141,16 @@ MonoBehaviour:
   turnSensitivity: 1
   maxSteerAngle: 30
   _centerOfMass: {x: 0, y: 0, z: 0}
+  Life: 3
+  CanTakeDamage: 1
+  CanTakeItem: 0
+  _canMove: 0
+  _bomb: {fileID: 279145016629726347, guid: 32dd14bc040ee9f4383d794cfddbf687, type: 3}
+  _bombOrigin: {fileID: 861550106}
+  _canShootBomb: 0
+  ShieldPrefab: {fileID: 0}
+  _canActiveShield: 0
+  HaveShield: 0
   wheels:
   - wheelModel: {fileID: 2084944976}
     wheelCollider: {fileID: 2084944978}
@@ -162,12 +172,6 @@ MonoBehaviour:
     wheelEffectObj: {fileID: 0}
     smokeParticle: {fileID: 0}
     axel: 1
-  _bombOrigin: {fileID: 861550106}
-  canMove: 1
-  Life: 3
-  CanTakeDamage: 1
-  bomb: {fileID: 279145016629726347, guid: 32dd14bc040ee9f4383d794cfddbf687, type: 3}
-  _canShootBomb: 1
 --- !u!54 &14823704
 Rigidbody:
   m_ObjectHideFlags: 0
