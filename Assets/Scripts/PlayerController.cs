@@ -153,17 +153,18 @@ public class PlayerController : MonoBehaviour
     {
         if (HaveSpeedBoost)
         {
-            maxAcceleration = 10000;
-            foreach (var wheel in wheels)
-            {
-            }
+            maxAcceleration = 500;
             StartCoroutine(EndBoost());
+        }
+        else
+        {
+            maxAcceleration = 20;
         }
     }
 
     IEnumerator EndBoost()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.1f);
         maxAcceleration = 20;
         HaveSpeedBoost = false;
     }
