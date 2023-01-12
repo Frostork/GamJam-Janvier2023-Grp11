@@ -35,16 +35,20 @@ public class Bomb : MonoBehaviour
 
         if (Contains(_playerMask, col.gameObject.layer))
         {
-            if (col.gameObject.GetComponentInParent<PlayerController>().CanTakeDamage ||
+            if (col.gameObject.GetComponentInParent<PlayerController>().CanTakeDamage &&
                 !col.gameObject.GetComponentInParent<PlayerController>().HaveShield)
             { 
+                print("aïe");
                 col.gameObject.GetComponentInParent<PlayerController>().TakeDamage();
+                Destroy(gameObject);
             }
 
             if (col.gameObject.GetComponentInParent<PlayerController>().HaveShield)
             {
+                print("pas aïe");
                 col.gameObject.GetComponentInParent<PlayerController>().HaveShield = false;
                 col.gameObject.GetComponentInParent<PlayerController>().ShieldPrefab.SetActive(false);
+                Destroy(gameObject);
             }
         }
     }

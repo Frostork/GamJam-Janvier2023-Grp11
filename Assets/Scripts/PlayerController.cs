@@ -119,11 +119,13 @@ public class PlayerController : MonoBehaviour
             var actualBomb = Instantiate(_bomb, _bombOrigin.transform.position, _bombOrigin.transform.localRotation);
             actualBomb.GetComponent<Rigidbody>().AddForce(_bombOrigin.transform.forward * 5000);
 
-            if (_canActiveShield)
-            {
-                _canActiveShield = false;
-                ShieldPrefab.SetActive(true);
-            }
+
+        }
+        if (_canActiveShield)
+        {
+            _canActiveShield = false;
+            HaveShield = true;
+            ShieldPrefab.SetActive(true);
         }
     }
 
