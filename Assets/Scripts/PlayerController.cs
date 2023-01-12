@@ -84,11 +84,15 @@ public class PlayerController : MonoBehaviour
         GetInputs();
         AnimateWheels();
         
-        if (_canShootBomb && Input.GetKeyDown(KeyCode.Space))
+        _canShootBomb = true;
+        if (_canShootBomb && Input.GetKeyDown(KeyCode.T))
         {
-            _canShootBomb = false;
-            var actualBomb = Instantiate(bomb, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z + 3), Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-            actualBomb.GetComponent<Rigidbody>().AddForce(transform.forward * 2000);
+            if (_canShootBomb)
+            {
+                _canShootBomb = false;
+                var actualBomb = Instantiate(bomb, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z + 3), Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+                actualBomb.GetComponent<Rigidbody>().AddForce(transform.forward * 5000);
+            }
         }
         
         //WheelEffects();

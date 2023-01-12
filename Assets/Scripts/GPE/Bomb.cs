@@ -36,9 +36,9 @@ public class Bomb : MonoBehaviour
         if (Contains(_playerMask, col.gameObject.layer))
         {
             print("aïe");
-                col.gameObject.transform.parent.GetComponent<PlayerController>().TakeDamage();
-            if (col.gameObject.transform.parent.GetComponent<PlayerController>().CanTakeDamage)
+            if (col.gameObject.GetComponentInParent<PlayerController>().CanTakeDamage)
             { 
+                col.gameObject.GetComponentInParent<PlayerController>().TakeDamage();
             }
         }
     }
@@ -49,9 +49,9 @@ public class Bomb : MonoBehaviour
 
     IEnumerator Explosed()
     {
-        //yield return new WaitForSeconds(_timeAlived);
+        yield return new WaitForSeconds(_timeAlived);
         _damageZone.SetActive(true);
         yield return new WaitForSeconds(2);
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
 }
