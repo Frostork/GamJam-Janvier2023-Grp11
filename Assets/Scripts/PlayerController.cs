@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -44,12 +45,38 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody carRb;
 
+    [SerializeField] private bool canMove;
+    public int Life;
+    public bool CanTakeDamage;
     [SerializeField] private GameObject bomb;
+    [SerializeField] private bool _canShootBomb;
+
+    public void TakeDamage()
+    {
+        foreach(var wheel in wheels)
+        {
+            carRb.velocity = Vector3.zero;
+        }
+        
+        Life -= 1;
+        CanTakeDamage = false;
+        canMove = false;
+        StartCoroutine(Restart());
+    }
+
+    IEnumerator Restart()
+    {
+        yield return new WaitForSeconds(2);
+        canMove = true;
+        CanTakeDamage = true;
+    }
 
     void Start()
     {
         carRb = GetComponent<Rigidbody>();
         carRb.centerOfMass = _centerOfMass;
+        canMove = true;
+        CanTakeDamage = true;
     }
 
     void Update()
@@ -57,11 +84,10 @@ public class PlayerController : MonoBehaviour
         GetInputs();
         AnimateWheels();
         
-        
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (_canShootBomb && Input.GetKeyDown(KeyCode.Space))
         {
-            var actualBomb = Instantiate(bomb);
-            
+            _canShootBomb = false;
+            var actualBomb = Instantiate(bomb, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z - 5), Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
             actualBomb.GetComponent<Rigidbody>().AddForce(-transform.forward * 2000);
         }
         
@@ -88,7 +114,7 @@ public class PlayerController : MonoBehaviour
 
     void GetInputs()
     {
-        if(control == ControlMode.Keyboard)
+        if(canMove && control == ControlMode.Keyboard)
         {
             moveInput = Input.GetAxis("Vertical");
             steerInput = Input.GetAxis("Horizontal");
@@ -97,9 +123,19 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        foreach(var wheel in wheels)
+        if (canMove)
         {
-            wheel.wheelCollider.motorTorque = -moveInput * 1000 * maxAcceleration * Time.deltaTime;
+            foreach(var wheel in wheels)
+            {
+                wheel.wheelCollider.motorTorque = moveInput * 1000 * maxAcceleration * Time.deltaTime;
+            }
+        }
+        else
+        {
+            foreach(var wheel in wheels)
+            {
+                wheel.wheelCollider.motorTorque = 0;
+            }
         }
     }
 
@@ -163,4 +199,5 @@ public class PlayerController : MonoBehaviour
     //         }
     //     }
     // }
+    
 }

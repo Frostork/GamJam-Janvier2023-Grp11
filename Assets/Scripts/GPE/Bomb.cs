@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -14,6 +11,8 @@ public class Bomb : MonoBehaviour
     private Vector3 _direction;
 
     [SerializeField] private float _timeAlived;
+    [SerializeField] private GameObject _damageZone;
+    [SerializeField] private LayerMask _playerMask;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -24,6 +23,7 @@ public class Bomb : MonoBehaviour
     {
         _lastVelocity = _rigidbody.velocity;
 
+        _rigidbody.velocity -= _rigidbody.velocity / 1500;
     }
 
     private void OnCollisionEnter(Collision col)
@@ -32,11 +32,26 @@ public class Bomb : MonoBehaviour
         _direction = Vector3.Reflect(_lastVelocity.normalized, col.contacts[0].normal);
 
         _rigidbody.velocity = _direction * Mathf.Max(_speed, 0f);
+
+        if (Contains(_playerMask, col.gameObject.layer))
+        {
+            print("aïe");
+                col.gameObject.transform.parent.GetComponent<PlayerController>().TakeDamage();
+            if (col.gameObject.transform.parent.GetComponent<PlayerController>().CanTakeDamage)
+            { 
+            }
+        }
+    }
+    public static bool Contains(LayerMask mask, int layer)
+    {
+        return mask == (mask | (1 << layer));
     }
 
     IEnumerator Explosed()
     {
-        yield return new WaitForSeconds(_timeAlived);
-        Destroy(gameObject);
+        //yield return new WaitForSeconds(_timeAlived);
+        _damageZone.SetActive(true);
+        yield return new WaitForSeconds(2);
+        //Destroy(gameObject);
     }
 }
