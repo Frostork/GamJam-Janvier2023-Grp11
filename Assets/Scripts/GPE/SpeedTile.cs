@@ -11,9 +11,10 @@ public class SpeedTile : MonoBehaviour
     {
         if (  Contains(PlayerLayer, other.gameObject.layer))
         {
-            if (other.gameObject.GetComponentInParent<PlayerController>().CanTakeDamage)
-            { 
-                other.gameObject.GetComponentInParent<PlayerController>().TakeDamage();
+            if (!other.gameObject.GetComponentInParent<PlayerController>().HaveSpeedBoost)
+            {
+                print("boost !");
+                other.gameObject.GetComponentInParent<PlayerController>().HaveSpeedBoost = true;
             }
         }
     }

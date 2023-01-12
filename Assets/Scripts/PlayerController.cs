@@ -61,8 +61,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private bool _canMove;
 
-    [Header("GPE")]
-    
+    [Header("GPE")] 
+    private Vector3 lastVelocity;
+    public bool HaveSpeedBoost;
     
     [Header("\nItems\n")]
     [Header("Bomb")] [SerializeField] private GameObject _bomb;
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Wheels")] public List<Wheel> wheels;
 
+    private AudioSource _audioSource;
     #endregion
 
     #region Take Damage
@@ -109,6 +111,7 @@ public class PlayerController : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _carRb = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
         _carRb.centerOfMass = _centerOfMass;
         _canMove = true;
         CanTakeDamage = true;
@@ -146,6 +149,25 @@ public class PlayerController : MonoBehaviour
         //WheelEffects();
     }
 
+    private void FixedUpdate()
+    {
+        if (HaveSpeedBoost)
+        {
+            maxAcceleration = 10000;
+            foreach (var wheel in wheels)
+            {
+            }
+            StartCoroutine(EndBoost());
+        }
+    }
+
+    IEnumerator EndBoost()
+    {
+        yield return new WaitForSeconds(1);
+        maxAcceleration = 20;
+        HaveSpeedBoost = false;
+    }
+
     void LateUpdate()
     {
         Move();
@@ -171,6 +193,15 @@ public class PlayerController : MonoBehaviour
         {
             moveInput = Input.GetAxis("Vertical");
             steerInput = Input.GetAxis("Horizontal");
+        }
+
+        if (moveInput > 0)
+        {
+            _audioSource.pitch += 0.01f;
+            if (_audioSource.pitch > 2.3f)
+            {
+                _audioSource.pitch = 2.3f;
+            }
         }
     }
 
