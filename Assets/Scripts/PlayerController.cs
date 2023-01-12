@@ -61,6 +61,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private bool _canMove;
 
+    [Header("GPE")]
+    
+    
+    [Header("\nItems\n")]
     [Header("Bomb")] [SerializeField] private GameObject _bomb;
     [SerializeField] private GameObject _bombOrigin;
     [SerializeField] private bool _canShootBomb;
