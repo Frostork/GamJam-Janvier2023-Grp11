@@ -139,7 +139,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         GetInputs();
-        AnimateWheels();
         _bombOrigin.transform.rotation = transform.localRotation;
 
         if (Input.GetKeyDown(KeyCode.T))
@@ -158,8 +157,13 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            maxAcceleration = 20;
+           // maxAcceleration = 20;
         }
+
+        Move();
+        Steer();
+        Brake();
+        AnimateWheels();
     }
 
     IEnumerator EndBoost()
@@ -167,13 +171,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         maxAcceleration = 20;
         HaveSpeedBoost = false;
-    }
-
-    void LateUpdate()
-    {
-        Move();
-        Steer();
-        Brake();
     }
 
     #region Movement Functions
