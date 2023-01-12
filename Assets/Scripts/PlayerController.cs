@@ -45,19 +45,23 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody carRb;
 
+    [SerializeField] private GameObject _bombOrigin;
     [SerializeField] private bool canMove;
     public int Life;
     public bool CanTakeDamage;
     [SerializeField] private GameObject bomb;
     [SerializeField] private bool _canShootBomb;
 
+    private Animator _animator;
     public void TakeDamage()
     {
-        foreach(var wheel in wheels)
+        foreach (var wheel in wheels)
         {
+            wheel.wheelCollider.brakeTorque = 10000 * brakeAcceleration * Time.deltaTime;
             carRb.velocity = Vector3.zero;
         }
         
+        _animator.SetBool("IsHit", true);
         Life -= 1;
         CanTakeDamage = false;
         canMove = false;
@@ -69,10 +73,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(2);
         canMove = true;
         CanTakeDamage = true;
+        _animator.SetBool("IsHit", false);
     }
 
     void Start()
     {
+        _animator = GetComponent<Animator>();
         carRb = GetComponent<Rigidbody>();
         carRb.centerOfMass = _centerOfMass;
         canMove = true;
@@ -83,6 +89,7 @@ public class PlayerController : MonoBehaviour
     {
         GetInputs();
         AnimateWheels();
+        _bombOrigin.transform.rotation = transform.localRotation;
         
         _canShootBomb = true;
         if (_canShootBomb && Input.GetKeyDown(KeyCode.T))
@@ -90,8 +97,8 @@ public class PlayerController : MonoBehaviour
             if (_canShootBomb)
             {
                 _canShootBomb = false;
-                var actualBomb = Instantiate(bomb, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z + 3), Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-                actualBomb.GetComponent<Rigidbody>().AddForce(transform.forward * 5000);
+                var actualBomb = Instantiate(bomb, _bombOrigin.transform.position, _bombOrigin.transform.localRotation);
+                actualBomb.GetComponent<Rigidbody>().AddForce(_bombOrigin.transform.forward * 5000);
             }
         }
         
@@ -129,6 +136,9 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove)
         {
+            _animator.SetBool("IsDrive", true);     
+            _animator.SetBool("IsIdle", false);
+            
             foreach(var wheel in wheels)
             {
                 wheel.wheelCollider.motorTorque = moveInput * 1000 * maxAcceleration * Time.deltaTime;
@@ -136,6 +146,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            _animator.SetBool("IsDrive", false);
+            _animator.SetBool("IsIdle", true);
+            
             foreach(var wheel in wheels)
             {
                 wheel.wheelCollider.motorTorque = 0;
