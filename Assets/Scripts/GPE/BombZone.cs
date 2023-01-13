@@ -8,9 +8,9 @@ public class BombZone : MonoBehaviour
     {
         if (  Contains(PlayerLayer, other.gameObject.layer))
         {
-            if (other.gameObject.GetComponentInParent<PlayerController>().CanTakeDamage)
+            if (other.gameObject.GetComponentInParent<PlayerManager>().CanTakeDamage)
             { 
-                other.gameObject.GetComponentInParent<PlayerController>().TakeDamage();
+                other.gameObject.GetComponentInParent<PlayerManager>().TakeDamage();
             }
         }
     }

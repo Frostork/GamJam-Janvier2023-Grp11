@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CarController : MonoBehaviour
@@ -8,8 +10,11 @@ public class CarController : MonoBehaviour
     public float fwdSpeed;
     public float revSpeed;
     public float turnSpeed;
-    
+
     public Rigidbody SphereRigidbody;
+    private Animator _animator;
+    private AudioSource _audioSource;
+
 
     private void Start()
     {
@@ -20,9 +25,9 @@ public class CarController : MonoBehaviour
     {
         moveInput = Input.GetAxisRaw("Vertical");
         turnInput = Input.GetAxisRaw("Horizontal");
-        
+
         moveInput *= moveInput > 0 ? fwdSpeed : revSpeed;
-        
+
         transform.position = SphereRigidbody.transform.position;
 
         float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
