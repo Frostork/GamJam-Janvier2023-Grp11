@@ -11,6 +11,7 @@ public class Bomb : MonoBehaviour
     private Vector3 _direction;
 
     [SerializeField] private float _timeAlived;
+    [SerializeField] private GameObject _bombPrefab;
     [SerializeField] private GameObject _damageZone;
     [SerializeField] private LayerMask _playerMask;
     private void Awake()
@@ -61,7 +62,8 @@ public class Bomb : MonoBehaviour
     {
         yield return new WaitForSeconds(_timeAlived);
         _damageZone.SetActive(true);
-        yield return new WaitForSeconds(2);
+        _bombPrefab.SetActive(false);
+        yield return new WaitForSeconds(0.4f);
         Destroy(gameObject);
     }
 }

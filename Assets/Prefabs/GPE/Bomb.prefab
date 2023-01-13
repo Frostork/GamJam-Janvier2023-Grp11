@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 0}
   _timeAlived: 3
+  _bombPrefab: {fileID: 8825998338333806803}
   _damageZone: {fileID: 700854683168041572}
   _playerMask:
     serializedVersion: 2
