@@ -12,8 +12,6 @@ public class PlayerManager : MonoBehaviour
     public bool CanTakeDamage;
     public bool CanTakeItem;
 
-    [SerializeField] private bool _canMove;
-
     [Header("GPE")] 
     [SerializeField] float _speedAccelerate;
     public bool HaveSpeedBoost;
@@ -28,11 +26,16 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private bool _canActiveShield;
     public bool HaveShield;
 
+    [Header("Turbo")] 
+    public GameObject TurboPrefab;
+    [SerializeField] private GameObject FireTurbo;
+    [SerializeField] private float _acceleratePower;
+    [SerializeField] private bool _canActiveTurbo;
+    [SerializeField] private bool _isUsingTurbo;
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
-        _canMove = true;
         CanTakeDamage = true;
         CanTakeItem = true;
     }
@@ -40,6 +43,11 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         _bombOrigin.transform.rotation = transform.localRotation;
+
+        if (_canActiveTurbo)
+        {
+            TurboPrefab.SetActive(true);
+        }
         
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -79,8 +87,24 @@ public class PlayerManager : MonoBehaviour
             HaveShield = true;
             ShieldPrefab.SetActive(true);
         }
+
+        if (_canActiveTurbo)
+        {
+            _canActiveTurbo = false;
+            FireTurbo.SetActive(true);
+            _isUsingTurbo = true;
+            SphereRigidbody.AddForce(transform.forward * _speedAccelerate * _acceleratePower, ForceMode.Impulse);
+            StartCoroutine(TurboCoolDown());
+        }
     }
-    
+
+    IEnumerator TurboCoolDown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _isUsingTurbo = false;
+        TurboPrefab.SetActive(false);
+        FireTurbo.SetActive(false);
+    }
     #region Take Damage
 
     public void TakeDamage()
@@ -90,14 +114,12 @@ public class PlayerManager : MonoBehaviour
         _animator.SetBool("IsHit", true);
         Life -= 1;
         CanTakeDamage = false;
-        _canMove = false;
         StartCoroutine(Restart());
     }
 
     IEnumerator Restart()
     {
         yield return new WaitForSeconds(2);
-        _canMove = true;
         CanTakeDamage = true;
         _animator.SetBool("IsHit", false);
     }
