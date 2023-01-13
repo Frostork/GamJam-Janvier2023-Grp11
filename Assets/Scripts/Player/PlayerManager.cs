@@ -57,10 +57,10 @@ public class PlayerManager : MonoBehaviour
             TurboPrefab.SetActive(true);
         }
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            ActiveItem();
-        }
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
+        //    ActiveItem();
+        //}
 
         // if (moveInput > 0)
         // {

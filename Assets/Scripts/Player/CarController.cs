@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CarController : MonoBehaviour
 {
@@ -18,8 +19,8 @@ public class CarController : MonoBehaviour
  
     private void Update()
     {
-        Vector2 inputs = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        inputDirection = inputs.normalized;
+        //Vector2 inputs = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        //inputDirection = inputs.normalized;
     }
  
     private void FixedUpdate()
@@ -27,5 +28,11 @@ public class CarController : MonoBehaviour
         Quaternion deltaRotation = Quaternion.Euler(inputDirection.x * rotationSpeed * Time.deltaTime);
         rb.MoveRotation(rb.rotation * deltaRotation);
         rb.MovePosition(rb.position + transform.forward * movementSpeed * boostBonus * inputDirection.y * Time.deltaTime);
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        Vector2 inputs = context.ReadValue<Vector2>();
+        inputDirection = inputs.normalized;
     }
 }
