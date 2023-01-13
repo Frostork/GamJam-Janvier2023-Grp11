@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] private GameObject _creditsPanel;
-    
+
     private AudioSource _audioSource;
-    
+
     public void Play()
     {
         SceneManager.LoadScene(1);
@@ -23,7 +23,7 @@ public class MenuManager : MonoBehaviour
     {
         _creditsPanel.SetActive(false);
     }
-    
+
     public void Quit()
     {
         //If we are running in a standalone build of the game
