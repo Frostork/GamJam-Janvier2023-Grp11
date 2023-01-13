@@ -5,34 +5,27 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    private float moveInput;
-    private float turnInput;
-    public float fwdSpeed;
-    public float revSpeed;
-    public float turnSpeed;
-
-    public Rigidbody SphereRigidbody;
-
-    private void Start()
+    public float movementSpeed = 15;
+    public float boostBonus = 1;
+    public Vector3 rotationSpeed = new Vector3(0,40,0);
+    private Rigidbody rb;
+    private Vector2 inputDirection;
+ 
+    void Start()
     {
-        SphereRigidbody.transform.parent = null;
+        rb = GetComponent<Rigidbody>();
     }
-
+ 
     private void Update()
     {
-        moveInput = Input.GetAxisRaw("Vertical");
-        turnInput = Input.GetAxisRaw("Horizontal");
-
-        moveInput *= moveInput > 0 ? fwdSpeed : revSpeed;
-
-        transform.position = SphereRigidbody.transform.position;
-
-        float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
-        transform.Rotate(0, newRotation, 0, Space.World);
+        Vector2 inputs = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        inputDirection = inputs.normalized;
     }
-
+ 
     private void FixedUpdate()
     {
-        SphereRigidbody.AddForce(transform.forward * moveInput, ForceMode.Acceleration);
+        Quaternion deltaRotation = Quaternion.Euler(inputDirection.x * rotationSpeed * Time.deltaTime);
+        rb.MoveRotation(rb.rotation * deltaRotation);
+        rb.MovePosition(rb.position + transform.forward * movementSpeed * boostBonus * inputDirection.y * Time.deltaTime);
     }
 }

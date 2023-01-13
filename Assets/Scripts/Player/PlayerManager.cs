@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public Rigidbody SphereRigidbody;
+    public CarController _CarController;
     private Animator _animator;
-    private AudioSource _audioSource;
     public int Life;
     public bool CanTakeDamage;
     public bool CanTakeItem;
 
-    [Header("GPE")] 
+    [Header("GPE")]
+    [SerializeField] private float _timeToResetSpeed;
     [SerializeField] float _speedAccelerate;
     public bool HaveSpeedBoost;
 
@@ -35,6 +35,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float _acceleratePower;
     [SerializeField] private bool _canActiveTurbo;
     [SerializeField] private bool _isUsingTurbo;
+
+    [Header("Audio")] 
+    private AudioSource _audioSource;
+    public List<AudioClip> AudioClips;
+    
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -51,7 +56,7 @@ public class PlayerManager : MonoBehaviour
         {
             TurboPrefab.SetActive(true);
         }
-        
+
         if (Input.GetKeyDown(KeyCode.T))
         {
             ActiveItem();
@@ -72,14 +77,22 @@ public class PlayerManager : MonoBehaviour
         if (HaveSpeedBoost)
         {
             HaveSpeedBoost = false;
-            SphereRigidbody.AddForce(transform.forward * _speedAccelerate, ForceMode.Impulse);
+            _CarController.boostBonus = _speedAccelerate;
+            StartCoroutine(ResetSpeed());
         }
 
         if (HaveSpeedLack)
         {
             HaveSpeedLack = false;
-            SphereRigidbody.AddForce(-transform.forward * _speedDecelerate, ForceMode.Impulse);
+            _CarController.boostBonus = _speedDecelerate;
+            StartCoroutine(ResetSpeed());
         }
+    }
+
+    IEnumerator ResetSpeed()
+    {
+        yield return new WaitForSeconds(_timeToResetSpeed);
+        _CarController.boostBonus = 1;
     }
 
     private void ActiveItem()
@@ -102,14 +115,15 @@ public class PlayerManager : MonoBehaviour
             _canActiveTurbo = false;
             FireTurbo.SetActive(true);
             _isUsingTurbo = true;
-            SphereRigidbody.AddForce(transform.forward * (_speedAccelerate * _acceleratePower), ForceMode.Impulse);
+            _CarController.boostBonus = _speedAccelerate;
             StartCoroutine(TurboCoolDown());
         }
     }
 
     IEnumerator TurboCoolDown()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(3);
+        _CarController.boostBonus = 1;
         _isUsingTurbo = false;
         TurboPrefab.SetActive(false);
         FireTurbo.SetActive(false);
@@ -118,8 +132,8 @@ public class PlayerManager : MonoBehaviour
 
     public void TakeDamage()
     {
-        SphereRigidbody.velocity = Vector3.zero;
-
+        _audioSource.clip = AudioClips[0];
+        _audioSource.Play();
         _animator.SetBool("IsHit", true);
         Life -= 1;
         CanTakeDamage = false;
