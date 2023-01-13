@@ -326,7 +326,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2571058817459167981}
-  - {fileID: 2604352866184835733}
   - {fileID: 2604352867639018519}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -347,6 +346,7 @@ MonoBehaviour:
   revSpeed: 120
   turnSpeed: 90
   SphereRigidbody: {fileID: 2604352867639018523}
+  AudioClips: []
 --- !u!1 &2604352866184835732
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,12 +375,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2604352866184835732}
   m_LocalRotation: {x: 0.08263426, y: -0, z: -0, w: 0.99657995}
-  m_LocalPosition: {x: 0.02, y: 6.76, z: -18.17}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.01, y: 3.63, z: -9.085003}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2604352866074291562}
-  m_RootOrder: 1
+  m_Father: {fileID: 2571058817459167981}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 9.48, y: 0, z: 0}
 --- !u!20 &2604352866184835730
 Camera:
@@ -717,12 +717,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2604352867639018522}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.78999996, z: 0}
+  m_LocalScale: {x: 5.716, y: 5.716, z: 5.716}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2604352866074291562}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2604352867639018518
 MeshFilter:
@@ -830,6 +830,7 @@ Transform:
   - {fileID: 2604352866521860566}
   - {fileID: 2571058817154100651}
   - {fileID: 1931276267}
+  - {fileID: 2604352866184835733}
   m_Father: {fileID: 2604352866074291562}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1049,9 +1050,9 @@ MonoBehaviour:
   Life: 3
   CanTakeDamage: 0
   CanTakeItem: 0
-  _speedAccelerate: 300
+  _speedAccelerate: 100
   HaveSpeedBoost: 0
-  _speedDecelerate: 0
+  _speedDecelerate: 35
   HaveSpeedLack: 0
   _bomb: {fileID: 279145016629726347, guid: 32dd14bc040ee9f4383d794cfddbf687, type: 3}
   _bombOrigin: {fileID: 2604352866521860565}
@@ -1061,9 +1062,11 @@ MonoBehaviour:
   HaveShield: 0
   TurboPrefab: {fileID: 2947022063357622033}
   FireTurbo: {fileID: 1931276266}
-  _acceleratePower: 2
+  _acceleratePower: 1.3
   _canActiveTurbo: 0
   _isUsingTurbo: 0
+  AudioClips:
+  - {fileID: 8300000, guid: 2f0280499399b7a43bfbf48a70ec01a9, type: 3}
 --- !u!1 &3553821116593532395
 GameObject:
   m_ObjectHideFlags: 0
