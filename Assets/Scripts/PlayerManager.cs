@@ -15,6 +15,9 @@ public class PlayerManager : MonoBehaviour
     [Header("GPE")] 
     [SerializeField] float _speedAccelerate;
     public bool HaveSpeedBoost;
+
+    [SerializeField] private float _speedDecelerate;
+    public bool HaveSpeedLack;
     
     [Header("\nItems\n")]
     [Header("Bomb")] [SerializeField] private GameObject _bomb;
@@ -71,6 +74,12 @@ public class PlayerManager : MonoBehaviour
             HaveSpeedBoost = false;
             SphereRigidbody.AddForce(transform.forward * _speedAccelerate, ForceMode.Impulse);
         }
+
+        if (HaveSpeedLack)
+        {
+            HaveSpeedLack = false;
+            SphereRigidbody.AddForce(-transform.forward * _speedDecelerate, ForceMode.Impulse);
+        }
     }
 
     private void ActiveItem()
@@ -93,7 +102,7 @@ public class PlayerManager : MonoBehaviour
             _canActiveTurbo = false;
             FireTurbo.SetActive(true);
             _isUsingTurbo = true;
-            SphereRigidbody.AddForce(transform.forward * _speedAccelerate * _acceleratePower, ForceMode.Impulse);
+            SphereRigidbody.AddForce(transform.forward * (_speedAccelerate * _acceleratePower), ForceMode.Impulse);
             StartCoroutine(TurboCoolDown());
         }
     }

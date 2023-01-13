@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpeedTile : MonoBehaviour
+public class AccelerateSpeedTile : MonoBehaviour
 {
     public LayerMask PlayerLayer;
     
