@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -20,20 +20,21 @@ public class PlayerManager : MonoBehaviour
     public bool HaveSpeedLack;
     
     [Header("\nItems\n")]
-    [Header("Bomb")] [SerializeField] private GameObject _bomb;
+    [Header("Bomb")] 
+    [SerializeField] private GameObject _bomb;
     [SerializeField] private GameObject _bombOrigin;
-    [SerializeField] private bool _canShootBomb;
+    public bool CanShootBomb;
 
     [Header("Shield")]
     public GameObject ShieldPrefab;
-    [SerializeField] private bool _canActiveShield;
+    public bool CanActiveShield;
     public bool HaveShield;
 
     [Header("Turbo")] 
     public GameObject TurboPrefab;
     [SerializeField] private GameObject FireTurbo;
     [SerializeField] private float _acceleratePower;
-    [SerializeField] private bool _canActiveTurbo;
+    public bool CanActiveTurbo;
     [SerializeField] private bool _isUsingTurbo;
 
     [Header("Audio")] 
@@ -52,7 +53,7 @@ public class PlayerManager : MonoBehaviour
     {
         _bombOrigin.transform.rotation = transform.localRotation;
 
-        if (_canActiveTurbo)
+        if (CanActiveTurbo)
         {
             TurboPrefab.SetActive(true);
         }
@@ -97,22 +98,22 @@ public class PlayerManager : MonoBehaviour
 
     private void ActiveItem()
     {
-        if (_canShootBomb)
+        if (CanShootBomb)
         {
-            _canShootBomb = false;
+            CanShootBomb = false;
             var actualBomb = Instantiate(_bomb, _bombOrigin.transform.position, _bombOrigin.transform.localRotation);
             actualBomb.GetComponent<Rigidbody>().AddForce(_bombOrigin.transform.parent.forward * 5000);
         }
-        if (_canActiveShield)
+        if (CanActiveShield)
         {
-            _canActiveShield = false;
+            CanActiveShield = false;
             HaveShield = true;
             ShieldPrefab.SetActive(true);
         }
 
-        if (_canActiveTurbo)
+        if (CanActiveTurbo)
         {
-            _canActiveTurbo = false;
+            CanActiveTurbo = false;
             FireTurbo.SetActive(true);
             _isUsingTurbo = true;
             _CarController.boostBonus = _speedAccelerate;
