@@ -6,12 +6,12 @@ public class SpeedTile : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        if (  Contains(PlayerLayer, other.gameObject.layer))
+        if (Contains(PlayerLayer, other.gameObject.layer))
         {
-            if (!other.gameObject.GetComponentInParent<PlayerController>().HaveSpeedBoost)
+            if (!other.gameObject.GetComponent<PlayerManager>().HaveSpeedBoost)
             {
                 print("boost !");
-                other.gameObject.GetComponentInParent<PlayerController>().HaveSpeedBoost = true;
+                other.gameObject.GetComponent<PlayerManager>().HaveSpeedBoost = true;
             }
         }
     }

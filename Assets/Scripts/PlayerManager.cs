@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private bool _canMove;
 
     [Header("GPE")] 
-    private Vector3 lastVelocity;
+    [SerializeField] float _speedAccelerate;
     public bool HaveSpeedBoost;
     
     [Header("\nItems\n")]
@@ -45,7 +45,7 @@ public class PlayerManager : MonoBehaviour
         {
             ActiveItem();
         }
-        
+
         // if (moveInput > 0)
         // {
         //     _audioSource.pitch += 0.01f;
@@ -54,6 +54,15 @@ public class PlayerManager : MonoBehaviour
         //         _audioSource.pitch = 2.3f;
         //     }
         // }
+    }
+
+    private void FixedUpdate()
+    {
+        if (HaveSpeedBoost)
+        {
+            HaveSpeedBoost = false;
+            SphereRigidbody.AddForce(transform.forward * _speedAccelerate, ForceMode.Impulse);
+        }
     }
 
     private void ActiveItem()

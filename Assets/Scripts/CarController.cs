@@ -12,9 +12,6 @@ public class CarController : MonoBehaviour
     public float turnSpeed;
 
     public Rigidbody SphereRigidbody;
-    private Animator _animator;
-    private AudioSource _audioSource;
-
 
     private void Start()
     {
